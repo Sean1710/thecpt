@@ -26,8 +26,8 @@ public class kofc implements ActionListener, MouseMotionListener, KeyListener, M
 	JButton HostContinue;
 	JButton ClientConnect;
 	JButton ClientContinue;
-	JButton ChooseRed;
-	JButton ChooseBlue;
+	JButton Redteam;
+	JButton Blueteam;
 	JButton ChooseMage;
 	JButton ChoosePaladin;
 	JButton ChooseKnight;
@@ -47,11 +47,16 @@ public class kofc implements ActionListener, MouseMotionListener, KeyListener, M
 	int intHealth4;
 	int intNum = 0;
 	int intMenu = 1;
+	int intselect = 0;
+	int intblue = 0;
+	int intred = 0;
 	String strusername;
 	String strIP;
 	String strConnectionStatus;
 	boolean blnHost;
 	boolean blnClient;
+	boolean blnRed;
+	boolean blnBlue;
 		
 	
 	//Methods
@@ -130,7 +135,7 @@ public class kofc implements ActionListener, MouseMotionListener, KeyListener, M
 		//Client/Host choice Screen, unhide client and server buttons
 		}else if(intMenu == 5){
 			Host.setVisible(true);
-			Confirm.setVisible(true);
+			Client.setVisible(true);
 			//Host
 			if (evt.getSource() == Host) {
 				System.out.println("Multiplayer: Host");
@@ -218,8 +223,42 @@ public class kofc implements ActionListener, MouseMotionListener, KeyListener, M
 		
 		//Choose Team Screen
 		}else if(intMenu == 8){
+			System.out.println("TeamSelectionMenu");
+			Redteam.setVisible(true);
+			Blueteam.setVisible(true);
 			
+			if(evt.getSource() == Redteam){
+				ssm.sendText("redteam"); 
+				Redteam.setEnabled(false);
+				Blueteam.setEnabled(false);
+				intred = intred + 1;
+				intselect = intselect + 1;
+				blnRed = true;
+				intMenu = 9;
+				
+			}else if(evt.getSource() == Blueteam){
+				ssm.sendText("blueteam"); 
+				Redteam.setEnabled(false);
+				Blueteam.setEnabled(false);
+				intselect = intselect + 1;
+				intblue = intblue + 1;
+				blnBlue = true;
+				intMenu = 9;
+			}	
 			
+			if (evt.getSource() == ssm) {
+				strConnectionStatus = ssm.readText();
+				if (strConnectionStatus.equals("Joined red team")) {
+					Redteam.setEnabled(false);
+					intselect = intselect + 1;
+				}
+				
+				if (strConnectionStatus.equals("Joined blue team")) {
+					Blueteam.setEnabled(false);
+					intselect = intselect + 1;
+				}
+				
+			}
 		
 		//Character Selection Screen
 		}else if(intMenu == 9){
@@ -480,6 +519,26 @@ public class kofc implements ActionListener, MouseMotionListener, KeyListener, M
 		thepanel.add(scrollchat);
 		scrollchat.setVisible(false);
 		
+		Redteam = new JButton("Red");
+		Redteam.setSize(200, 200);
+		Redteam.setLocation(400, 300);
+		thepanel.add(Redteam);
+		Redteam.setOpaque(false);
+		Redteam.setContentAreaFilled(false);
+		Redteam.setBorderPainted(false);
+		Redteam.setVisible(false);
+		Redteam.addActionListener(this);
+		
+		
+		Blueteam = new JButton("Blue");
+		Blueteam.setSize(200, 200);
+		Blueteam.setLocation(800, 300);
+		thepanel.add(Blueteam);
+		Blueteam.setOpaque(false);
+		Blueteam.setContentAreaFilled(false);
+		Blueteam.setBorderPainted(false);
+		Blueteam.setVisible(false);
+		Blueteam.addActionListener(this);
 		
 		
 	}
