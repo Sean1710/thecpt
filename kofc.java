@@ -23,6 +23,9 @@ public class kofc implements ActionListener, MouseMotionListener, KeyListener, M
 	JButton Confirm;
 	JButton Client;
 	JButton Host;
+	JButton HostContinue;
+	JButton ClientConnect;
+	JButton ClientContinue;
 	JButton ChooseRed;
 	JButton ChooseBlue;
 	JButton ChooseMage;
@@ -33,6 +36,11 @@ public class kofc implements ActionListener, MouseMotionListener, KeyListener, M
 	JButton Block;
 	JButton Heal;
 	JTextField txtusername;
+	JTextField txtchat;
+	JTextField txtip;
+	JTextArea areachat;
+	JScrollPane scrollchat;
+	int intPlayer = 1;
 	int intHealth1; 
 	int intHealth2;
 	int intHealth3;
@@ -41,6 +49,7 @@ public class kofc implements ActionListener, MouseMotionListener, KeyListener, M
 	int intMenu = 1;
 	String strusername;
 	String strIP;
+	String strConnectionStatus;
 	boolean blnHost;
 	boolean blnClient;
 		
@@ -146,10 +155,65 @@ public class kofc implements ActionListener, MouseMotionListener, KeyListener, M
 			
 		//Host Screen
 		}else if(intMenu == 6){	
+			HostContinue.setVisible(true);  
+			// [Host Continue Button]
+			if (evt.getSource() == HostContinue) {
+				HostContinue.setVisible(false); 
+				intMenu = 9; 
+				ssm.sendText("characterselectionmenu"); 
+			}
+			// Connection Check (Only allow Host to continue if it's connected with Client)
+			else if (evt.getSource() == ssm) {
+				strConnectionStatus = ssm.readText();
+				if (strConnectionStatus.equals("connect")) {
+					ssm.sendText("connected");
+					intPlayer = intPlayer + 1; 
+					areachat.setVisible(true); 
+					scrollchat.setVisible(true);
+					txtchat.setVisible(true);
+					ssm.sendText("You have joined " + strusername + "'s game. \n"); 
+					HostContinue.setEnabled(true);
+				}
+			}
 		
 		
 		//Client Screen
 		}else if(intMenu == 7){
+			ClientConnect.setVisible(true); 
+			txtip.setVisible(true);
+			// [Guest Connect Button]
+			if (evt.getSource() == ClientConnect) {
+				strIP = txtip.getText();
+				ssm = new SuperSocketMaster(strIP, 1337, this); 
+				ssm.connect();
+				ssm.sendText("connect");
+				ssm.sendText(strusername + " has joined the game. \n"); 
+				ClientConnect.setVisible(false); 
+				txtip.setVisible(false);
+			}
+			// Connection Check (Only allow Client to continue if it's connected with Host)
+			else if (evt.getSource() == ssm) {
+				strConnectionStatus = ssm.readText();
+				if (strConnectionStatus.equals("connected")) {
+					areachat.setVisible(true); 
+					scrollchat.setVisible(true);
+					txtchat.setVisible(true);
+					ClientContinue.setEnabled(true);
+					ClientContinue.setEnabled(false);
+					txtip.setEnabled(false);
+
+				}
+				// Go to CharacterSelectionMenu only if the host allows
+				else if (strConnectionStatus.equals("teamselection")) {
+					ClientContinue.setVisible(false); 
+					ClientConnect.setVisible(false);
+					txtip.setVisible(false);
+					ClientContinue.setEnabled(false);
+					ClientConnect.setEnabled(false);
+					txtip.setEnabled(false);
+					intMenu = 8; 
+				}
+			}
 		
 		
 		//Choose Team Screen
@@ -345,6 +409,76 @@ public class kofc implements ActionListener, MouseMotionListener, KeyListener, M
 		Client.setBorderPainted(false);
 		Client.setVisible(false);
 		Client.addActionListener(this);
+		
+		//Host's Continue 
+		HostContinue = new JButton("Continue");
+		HostContinue.setSize(200, 200);
+		HostContinue.setLocation(600, 300);
+		thepanel.add(HostContinue);
+		HostContinue.setOpaque(false);
+		HostContinue.setContentAreaFilled(false);
+		HostContinue.setBorderPainted(false);
+		HostContinue.setVisible(false);
+		HostContinue.addActionListener(this);
+		
+		//Client's connect to host
+		ClientConnect = new JButton("Connect");
+		ClientConnect.setSize(200, 200);
+		ClientConnect.setLocation(600, 300);
+		thepanel.add(ClientConnect);
+		ClientConnect.setOpaque(false);
+		ClientConnect.setContentAreaFilled(false);
+		ClientConnect.setBorderPainted(false);
+		ClientConnect.setVisible(false);
+		ClientConnect.addActionListener(this);
+		
+		//Client's continue
+		ClientContinue = new JButton("Continue");
+		ClientContinue.setSize(200, 200);
+		ClientContinue.setLocation(600, 300);
+		thepanel.add(ClientContinue);
+		ClientContinue.setOpaque(false);
+		ClientContinue.setContentAreaFilled(false);
+		ClientContinue.setBorderPainted(false);
+		ClientContinue.setVisible(false);
+		ClientContinue.addActionListener(this);
+		
+		//Chat Textfield
+		txtchat = new JTextField();
+		txtchat.setOpaque(false); 
+		txtchat.setSize(400, 35);
+		txtchat.setLocation(440, 100);
+		txtchat.addActionListener(this);
+		thepanel.add(txtchat);
+		txtchat.setVisible(false); 
+		
+		//IP textfield
+		txtip = new JTextField();
+		txtip.setOpaque(false); 
+		txtip.setSize(400, 35);
+		txtip.setLocation(440, 100);
+		txtchat.addActionListener(this);
+		thepanel.add(txtip);
+		txtip.setVisible(false); 
+		
+		
+		//Text area chat
+		areachat = new JTextArea();
+		areachat.setOpaque(false);
+		areachat.setForeground(Color.WHITE); 
+		areachat.setVisible(false);
+		areachat.setEnabled(false);
+		
+		//Scroll for chat
+		scrollchat = new JScrollPane(txtchat);
+		scrollchat.getViewport().setOpaque(false);
+		scrollchat.setOpaque(false);
+		scrollchat.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER); 
+		scrollchat.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); 
+		scrollchat.setSize(350, 200);
+		scrollchat.setLocation(930, 485);
+		thepanel.add(scrollchat);
+		scrollchat.setVisible(false);
 		
 		
 		
