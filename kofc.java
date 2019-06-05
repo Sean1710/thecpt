@@ -24,6 +24,7 @@ public class kofc implements ActionListener, MouseMotionListener, KeyListener, M
 	JButton Client;
 	JButton Host;
 	JButton HostContinue;
+	JButton Hoststart;
 	JButton ClientConnect;
 	JButton ClientContinue;
 	JButton Redteam;
@@ -57,6 +58,11 @@ public class kofc implements ActionListener, MouseMotionListener, KeyListener, M
 	boolean blnClient;
 	boolean blnRed;
 	boolean blnBlue;
+	boolean blnKnight;
+	boolean blnMage;
+	boolean blnPaladin;
+	boolean blnRogue;
+	
 		
 	
 	//Methods
@@ -232,15 +238,13 @@ public class kofc implements ActionListener, MouseMotionListener, KeyListener, M
 				Redteam.setEnabled(false);
 				Blueteam.setEnabled(false);
 				intred = intred + 1;
-				intselect = intselect + 1;
 				blnRed = true;
 				intMenu = 9;
-				
+					
 			}else if(evt.getSource() == Blueteam){
 				ssm.sendText("blueteam"); 
 				Redteam.setEnabled(false);
 				Blueteam.setEnabled(false);
-				intselect = intselect + 1;
 				intblue = intblue + 1;
 				blnBlue = true;
 				intMenu = 9;
@@ -248,20 +252,76 @@ public class kofc implements ActionListener, MouseMotionListener, KeyListener, M
 			
 			if (evt.getSource() == ssm) {
 				strConnectionStatus = ssm.readText();
-				if (strConnectionStatus.equals("Joined red team")) {
+				if (strConnectionStatus.equals("redteam")) {
 					Redteam.setEnabled(false);
-					intselect = intselect + 1;
 				}
 				
-				if (strConnectionStatus.equals("Joined blue team")) {
+				if (strConnectionStatus.equals("blueteam")) {
 					Blueteam.setEnabled(false);
-					intselect = intselect + 1;
 				}
-				
 			}
-		
+			
+			if(intred == 2){
+				Redteam.setEnabled(false);
+				Blueteam.setEnabled(false);
+				
+			}else if(intblue == 2){
+				Redteam.setEnabled(false);
+				Blueteam.setEnabled(false);
+			
+			}		
+			
+			
+			
 		//Character Selection Screen
 		}else if(intMenu == 9){
+			System.out.println("CharacterSelectionMenu");
+			ChooseKnight.setVisible(true);
+			ChooseMage.setVisible(true);
+			ChooseRogue.setVisible(true);
+			ChoosePaladin.setVisible(true);
+			
+			if(evt.getSource() == ChooseKnight){
+				ChooseKnight.setVisible(false);
+				ChooseMage.setVisible(false);
+				ChooseRogue.setVisible(false);
+				ChoosePaladin.setVisible(false);
+				blnKnight = true;
+				intselect = intselect + 1;
+			
+			}else if(evt.getSource() == ChooseMage){
+				ChooseKnight.setVisible(false);
+				ChooseMage.setVisible(false);
+				ChooseRogue.setVisible(false);
+				ChoosePaladin.setVisible(false);
+				blnMage = true;
+				intselect = intselect + 1;
+			
+			}else if(evt.getSource() == ChooseRogue){
+				ChooseKnight.setVisible(false);
+				ChooseMage.setVisible(false);
+				ChooseRogue.setVisible(false);
+				ChoosePaladin.setVisible(false);
+				blnRogue = true;
+				intselect = intselect + 1;
+				
+			}else if(evt.getSource() == ChoosePaladin){
+				ChooseKnight.setVisible(false);
+				ChooseMage.setVisible(false);
+				ChooseRogue.setVisible(false);
+				ChoosePaladin.setVisible(false);
+				blnPaladin = true;
+				intselect = intselect + 1;
+				
+			}	
+			
+			if (blnHost == true && intselect == 4) {
+				Hoststart.setVisible(true); // Display start game button only if everyone has selected their character
+			
+			// [Client] Check if Host clicked Start Game
+			}else if (blnClient == true) {	
+				
+			}
 		
 		
 		//Gameplay Screen
@@ -269,6 +329,7 @@ public class kofc implements ActionListener, MouseMotionListener, KeyListener, M
 			
 		
 		}
+		
 		
 	}
 	public void keyTyped(KeyEvent evt){
@@ -539,6 +600,63 @@ public class kofc implements ActionListener, MouseMotionListener, KeyListener, M
 		Blueteam.setBorderPainted(false);
 		Blueteam.setVisible(false);
 		Blueteam.addActionListener(this);
+		
+		//Knight button
+		ChooseKnight = new JButton("Knight");
+		ChooseKnight.setSize(200, 200);
+		ChooseKnight.setLocation(500, 300);
+		thepanel.add(ChooseKnight);
+		ChooseKnight.setOpaque(false);
+		ChooseKnight.setContentAreaFilled(false);
+		ChooseKnight.setBorderPainted(false);
+		ChooseKnight.setVisible(false);
+		ChooseKnight.addActionListener(this);
+		
+		//Mage button
+		ChooseMage = new JButton("Mage");
+		ChooseMage.setSize(200, 200);
+		ChooseMage.setLocation(800, 300);
+		thepanel.add(ChooseMage);
+		ChooseMage.setOpaque(false);
+		ChooseMage.setContentAreaFilled(false);
+		ChooseMage.setBorderPainted(false);
+		ChooseMage.setVisible(false);
+		ChooseMage.addActionListener(this);
+		
+		//Rogue button
+		ChooseRogue = new JButton("Rogue");
+		ChooseRogue.setSize(200, 200);
+		ChooseRogue.setLocation(500, 500);
+		thepanel.add(ChooseRogue);
+		ChooseRogue.setOpaque(false);
+		ChooseRogue.setContentAreaFilled(false);
+		ChooseRogue.setBorderPainted(false);
+		ChooseRogue.setVisible(false);
+		ChooseRogue.addActionListener(this);
+		
+		//Paladin button
+		ChoosePaladin = new JButton("Paladin");
+		ChoosePaladin.setSize(200, 200);
+		ChoosePaladin.setLocation(800, 500);
+		thepanel.add(ChoosePaladin);
+		ChoosePaladin.setOpaque(false);
+		ChoosePaladin.setContentAreaFilled(false);
+		ChoosePaladin.setBorderPainted(false);
+		ChoosePaladin.setVisible(false);
+		ChoosePaladin.addActionListener(this);
+		
+		//Host start
+		Hoststart = new JButton("Start");
+		Hoststart.setSize(200, 200);
+		Hoststart.setLocation(800, 500);
+		thepanel.add(Hoststart);
+		Hoststart.setOpaque(false);
+		Hoststart.setContentAreaFilled(false);
+		Hoststart.setBorderPainted(false);
+		Hoststart.setVisible(false);
+		Hoststart.addActionListener(this);
+		
+		
 		
 		
 	}
