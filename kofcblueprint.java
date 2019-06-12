@@ -11,7 +11,7 @@ public class kofcblueprint{
     public int intplayer2hp;
     public int intmaxhp2;
     public int intspeed2;
-    public String strcharclass;
+
     //globals for player stats & enemy stats
 	
 	public void Stats(){
@@ -52,14 +52,9 @@ public class kofcblueprint{
 		intspeed = 10;
 		if(Math.random() < 0.25){
 			intplayerdmg = 1;
-		}else if(Math.random() < 0.25){
-			intplayerdmg = 2;
-		}else if(Math.random() < 0.25){
-			intplayerdmg = 3;
 		}else{
 			intplayerdmg = 4;
 		}
-		
 	}
 	
 	//Rogue stats
@@ -106,16 +101,11 @@ public class kofcblueprint{
 		intmaxhp2 = 20;
 		intplayer2hp = 20;
 		intspeed2 = 10;
-		if(Math.random() < 0.25){
+		if(Math.random() < 0.5){
 			intplayer2dmg = 1;
-		}else if(Math.random() < 0.25){
-			intplayer2dmg = 2;
-		}else if(Math.random() < 0.25){
-			intplayer2dmg = 3;
 		}else{
 			intplayer2dmg = 4;
 		}
-		
 	}
 	
 	//Rogue2 stats
@@ -133,22 +123,51 @@ public class kofcblueprint{
 	
 	
 	//Healing
-	public void heal(int intheal){
+	public void heal(int intheal2){
         intplayerhp = intplayerhp + 4;
     }
 	
 	//Take damage
-	 public void losehealth(int intlosehealth){
-        intplayerhp = intplayerhp - intenemydmg;
+	 public void losehealth(int intlosehealth2){
+        intplayerhp = intplayerhp - intplayer2dmg;
     }
 	
-	
+	//Block
 	public void block(int intblock){
-		intenemydmg = intplayerhp;
-	
+		intplayer2dmg = intplayer2dmg - 2;
+		intspeed = intspeed + 100;
 	}	
 	
 	
+	//Healing p2
+	public void heal2(int intheal2){
+        intplayer2hp = intplayer2hp + 4;
+    }
+    
+	
+	//Take damage p2
+	 public void losehealth2(int intlosehealth2){
+        intplayer2hp = intplayer2hp - intplayerdmg;
+    }
+    
+	
+	//Block p2
+	public void block2(int intblock2){
+		intplayerdmg = intplayerdmg - 2;
+		intspeed2 = intspeed2 + 100;
+	}	
+	
+	public kofcblueprint(int intplayerhp, int intmaxhp, int intplayerdmg, int intspeed, int intplayer2hp,int intmaxhp2, int intplayer2dmg, int intspeed2){
+		this.intplayerhp = intplayerhp;
+		this.intmaxhp = intmaxhp;
+		this.intplayerdmg = intplayerdmg;
+		this.intspeed = intspeed;
+		this.intplayer2hp = intplayer2hp;
+		this.intmaxhp2 = intmaxhp2;
+		this.intplayer2dmg = intplayer2dmg;
+		this.intspeed2 = intspeed2;
+		
+	}
 }
 
 

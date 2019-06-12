@@ -49,15 +49,13 @@ public class kofc implements ActionListener, MouseMotionListener, KeyListener, M
 	int intNum = 0;
 	int intMenu = 1;
 	int intselect = 0;
-	int intblue = 0;
-	int intred = 0;
 	String strChat;
 	String strusername;
 	String strIP;
 	String strConnectionStatus;
 	boolean blnMenu = true;
-	boolean blnHost = false;
-	boolean blnClient = false;
+	boolean blnHost = false; //Player 1
+	boolean blnClient = false;  //Player 2
 	boolean blnRed = false;
 	boolean blnBlue = false;
 	boolean blnKnight = false;
@@ -159,6 +157,7 @@ public class kofc implements ActionListener, MouseMotionListener, KeyListener, M
 				strIP = ssm.getMyAddress(); // Convert IP Address into String strIP
 				ssm.connect();
 				intMenu = 6; // Change to HostMenu
+			
 			}
 			//Client
 			else if (evt.getSource() == Client) {
@@ -216,7 +215,7 @@ public class kofc implements ActionListener, MouseMotionListener, KeyListener, M
 					scrollchat.setVisible(true);
 					txtchat.setVisible(true);
 					ClientContinue.setEnabled(true);
-					ClientContinue.setEnabled(false);
+					ClientConnect.setEnabled(false);
 					txtip.setEnabled(false);
 
 				}
@@ -232,55 +231,9 @@ public class kofc implements ActionListener, MouseMotionListener, KeyListener, M
 				}
 			}
 		
-		
-		//Choose Team Screen
-		}else if(intMenu == 8){
-			System.out.println("TeamSelectionMenu");
-			Redteam.setVisible(true);
-			Blueteam.setVisible(true);
-			
-			if(evt.getSource() == Redteam){
-				ssm.sendText("redteam"); 
-				Redteam.setEnabled(false);
-				Blueteam.setEnabled(false);
-				intred = intred + 1;
-				blnRed = true;
-				intMenu = 9;
-					
-			}else if(evt.getSource() == Blueteam){
-				ssm.sendText("blueteam"); 
-				Redteam.setEnabled(false);
-				Blueteam.setEnabled(false);
-				intblue = intblue + 1;
-				blnBlue = true;
-				intMenu = 9;
-			}	
-			
-			if (evt.getSource() == ssm) {
-				strConnectionStatus = ssm.readText();
-				if (strConnectionStatus.equals("redteam")) {
-					Redteam.setEnabled(false);
-				}
-				
-				if (strConnectionStatus.equals("blueteam")) {
-					Blueteam.setEnabled(false);
-				}
-			}
-			
-			if(intred == 2){
-				Redteam.setEnabled(false);
-				Blueteam.setEnabled(false);
-				
-			}else if(intblue == 2){
-				Redteam.setEnabled(false);
-				Blueteam.setEnabled(false);
-			
-			}		
-			
-			
 			
 		//Character Selection Screen
-		}else if(intMenu == 9){
+		}else if(intMenu == 8){
 			System.out.println("CharacterSelectionMenu");
 			ChooseKnight.setVisible(true);
 			ChooseMage.setVisible(true);
@@ -328,49 +281,58 @@ public class kofc implements ActionListener, MouseMotionListener, KeyListener, M
 			// [Client] Check if Host clicked Start Game
 			if(evt.getSource() == Hoststart){
 				Hoststart.setVisible(false);
-				intMenu = 10;
+				intMenu = 9;
 				blnMenu = false;
 				thetimer.start();
 				
 				if(blnClient == true){
+					strConnectionStatus = ssm.readText();
+					if (strConnectionStatus.equals("startgame1")) {
 					Hoststart.setVisible(false);
-					intMenu = 10;
+					intMenu = 9;
 					blnMenu = false;
 					thetimer.start();
+					theframe.requestFocus();
+					
 				}	
 	
 			}
 		
-		// In-Game Chat (Receive)
-		if (evt.getSource() == ssm) {
-			strChat = ssm.readText();
-			// Block SSM data so they it doesn't show in chat
-			if (!strChat.equals("connect") && !strChat.equals("startgame3")&& !strChat.equals("startgame2")&& !strChat.equals("startgame1") && !strChat.equals("!wb_r") && !strChat.equals("!wb_p") && !strChat.equals("!wd_r") && !strChat.equals("!wd_p") && !strChat.equals("!wr_r") && !strChat.equals("!wr_p") && !strChat.equals("!wu_r") && !strChat.equals("!wu_p") && !strChat.equals("!wl_r") && !strChat.equals("!wl_p") && !strChat.equals("!rb_r") && !strChat.equals("!rb_p") && !strChat.equals("!rd_r") && !strChat.equals("!rd_p") && !strChat.equals("!rr_r") && !strChat.equals("!rr_p") && !strChat.equals("!ru_r") && !strChat.equals("!ru_p") && !strChat.equals("!rl_r") && !strChat.equals("!rl_p") && !strChat.equals("!yb_r") && !strChat.equals("!yb_p") && !strChat.equals("!yd_r") && !strChat.equals("!yd_p") && !strChat.equals("!yr_r") && !strChat.equals("!yr_p") && !strChat.equals("!yu_r") && !strChat.equals("!yu_p") && !strChat.equals("!yl_r") && !strChat.equals("!yl_p") && !strChat.equals("!bb_r") && !strChat.equals("!bb_p") && !strChat.equals("!bd_r") && !strChat.equals("!bd_p") && !strChat.equals("!br_r") && !strChat.equals("!br_p") && !strChat.equals("!bu_r") && !strChat.equals("!bu_p") && !strChat.equals("!bl_r") && !strChat.equals("!bl_p") && !strChat.equals("connected") && !strChat.equals("blue") && !strChat.equals("red") && !strChat.equals("yellow") && !strChat.equals("white") && !strChat.equals("characterselectionmenu")) { // Blacklist I/O data so they don't show in chat area
-				areachat.append(strChat + "\n");
-				theframe.requestFocus();
-				areachat.setCaretPosition(areachat.getDocument().getLength()); // Auto scroll down as new message pops up
+			// In-Game Chat (Receive)
+			if (evt.getSource() == ssm) {
+				strChat = ssm.readText();
+				// Block SSM data so they it doesn't show in chat
+				if (!strChat.equals("connect") && !strChat.equals("startgame1")){
+					areachat.append(strChat + "\n");
+					theframe.requestFocus();
+					areachat.setCaretPosition(areachat.getDocument().getLength()); // Auto scroll down as new message pops up
+				}
 			}
-		}
 
-		// In-Game Chat (Send) 
-		if (evt.getSource() == txtchat) {
-			System.out.println(strusername + ": " + txtchat.getText());
-			ssm.sendText(strusername + ": " + txtchat.getText());
-			areachat.append(strusername + ": " + txtchat.getText() + "\n");
-			txtchat.setText("");
-			theframe.requestFocus();
-			areachat.setCaretPosition(txtchat.getDocument().getLength()); // Auto scroll down as new message pops up
+			// In-Game Chat (Send) 
+			if (evt.getSource() == txtchat) {
+				System.out.println(strusername + ": " + txtchat.getText());
+				ssm.sendText(strusername + ": " + txtchat.getText());
+				areachat.append(strusername + ": " + txtchat.getText() + "\n");
+				txtchat.setText("");
+				theframe.requestFocus();
+				areachat.setCaretPosition(txtchat.getDocument().getLength()); // Auto scroll down as new message pops up
+			}
+			
 		}
-		
 		
 		//Gameplay Screen
-		}else if(intMenu == 10){
+		}else if(intMenu == 9){
+	
+				
+				
+				
 			
-		
 		}
 		
 		
 	}
+
 	public void keyTyped(KeyEvent evt){
 		
 	}
@@ -687,7 +649,7 @@ public class kofc implements ActionListener, MouseMotionListener, KeyListener, M
 		//Host start
 		Hoststart = new JButton("Start");
 		Hoststart.setSize(200, 200);
-		Hoststart.setLocation(800, 500);
+		Hoststart.setLocation(800, 100);
 		thepanel.add(Hoststart);
 		Hoststart.setOpaque(false);
 		Hoststart.setContentAreaFilled(false);
